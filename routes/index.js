@@ -28,7 +28,7 @@ router.post('/hw7', function(req, res, next) {
 
   con.connect(function(err) {
     if (err) throw err;
-    var sql = 'SELECT club, pos, player, a, gs FROM customers WHERE club = ? AND pos = ?';
+    var sql = 'SELECT club, pos, player, a, gs FROM assists WHERE club = ? AND pos = ?';
     con.query(sql, [club,pos],function (err, result, fields) {
       if (err) throw err;
       console.log(result);
