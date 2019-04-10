@@ -43,7 +43,8 @@ router.post('/hw7', function(req, res, next) {
       console.log('>> json: ', json);
       console.log('>> player: ', json[0].player);
       console.log('>> player: ', json[0].a);
-
+      player = json[0].player;
+      max_assists = json[0].a;
       console.log(result);
       var avg = 'SELECT AVG(a) AS avg_a FROM assists WHERE club = ? AND pos = ?';
         con.query(avg, [club,pos],function (err, result, fields) {
