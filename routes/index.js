@@ -28,7 +28,7 @@ router.post('/hw7', function(req, res, next) {
 
   con.connect(function(err) {
     if (err) throw err;
-    var sql = 'SELECT club, pos, player, a, gs FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC limit 1;';
+    var sql = 'SELECT club, pos, player, a, gs FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC limit 1';
     con.query(sql, [club,pos],function (err, result, fields) {
       if (err) throw err;
       console.log('>> result: ', result );
@@ -37,6 +37,18 @@ router.post('/hw7', function(req, res, next) {
       var json =  JSON.parse(string);
       console.log('>> json: ', json);
       console.log('>> player: ', json[0].player);
+
+      console.log(result);
+    });
+    var avg = 'SELECT AVG(a) FROM assists WHERE club = ? AND pos = ?';
+    con.query(sql, [club,pos],function (err, result, fields) {
+      if (err) throw err;
+      console.log('>> result: ', result );
+      var string=JSON.stringify(result);
+      console.log('>> string: ', string );
+      var json =  JSON.parse(string);
+      console.log('>> json: ', json);
+      console.log('>> player: ', json[0]);
 
       console.log(result);
     });
