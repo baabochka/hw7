@@ -25,7 +25,7 @@ router.post('/hw7', function(req, res, next) {
   var pos = req.query.pos;
   var max_assists = 0;
   var player = 0;
-  vart avg_assists = 0;
+  var avg_assists = 0;
   con.connect(function(err) {
     if (err) throw err;
     con.query("SELECT * FROM assists", function (err, result, fields) {
