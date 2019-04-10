@@ -7,7 +7,10 @@ var con = mysql.createConnection({
   password: "zaqsca",
   database: "hw7"
 });
-
+con.connect(function(err) {
+  if (err) throw err;
+  concole.log("Error while connecting to MySQL");
+});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -26,10 +29,9 @@ router.post('/hw7', function(req, res, next) {
   var player = 0;
   var avg_assists = 0;
 
-  con.connect(function(err) {
-    if (err) throw err;
-    var sql = 'SELECT club, pos, player, a, gs FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC limit 1';
-    con.query(sql, [club,pos],function (err, result, fields) {
+
+  var sql = 'SELECT club, pos, player, a, gs FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC limit 1';
+  con.query(sql, [club,pos],function (err, result, fields) {
       if (err) throw err;
       console.log('>> result: ', result );
       var string=JSON.stringify(result);
@@ -37,6 +39,7 @@ router.post('/hw7', function(req, res, next) {
       var json =  JSON.parse(string);
       console.log('>> json: ', json);
       console.log('>> player: ', json[0].player);
+      console.log('>> player: ', json[0].a);
 
       console.log(result);
     });
@@ -52,7 +55,6 @@ router.post('/hw7', function(req, res, next) {
 
       console.log(result);
     });
-  });
   res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg});
 });
 
