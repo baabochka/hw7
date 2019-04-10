@@ -51,7 +51,7 @@ router.post('/hw7', function(req, res, next) {
       console.log('>> AVG string: ', string );
       var json =  JSON.parse(string);
       console.log('>> AVG json: ', json);
-      console.log('>> AVG? ', json[0]);
+      console.log('>> AVG? ', json[0].AVG(a));
 
       console.log(result);
     });
