@@ -5,8 +5,7 @@ var con = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "zaqsca",
-  database: "hw7",
-  // socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock'
+  database: "hw7"
 });
 
 
@@ -26,10 +25,11 @@ router.post('/hw7', function(req, res, next) {
   var max_assists = 0;
   var player = 0;
   var avg_assists = 0;
-  console.log(club,pos);
+
   con.connect(function(err) {
     if (err) throw err;
-    con.query("SELECT * FROM assists", function (err, result, fields) {
+    var sql = 'SELECT club, pos, player, a, gs FROM customers WHERE club = ? AND pos = ?';
+    con.query(sql, [club,pos],function (err, result, fields) {
       if (err) throw err;
       console.log(result);
     });
