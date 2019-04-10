@@ -9,7 +9,7 @@ var con = mysql.createConnection({
 });
 con.connect(function(err) {
   if (err) throw err;
-  concole.log("Error while connecting to MySQL");
+  console.log("Error while connecting to MySQL");
 });
 
 /* GET home page. */
