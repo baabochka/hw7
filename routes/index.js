@@ -42,20 +42,22 @@ router.post('/hw7', function(req, res, next) {
       console.log('>> player: ', json[0].a);
 
       console.log(result);
-    });
-    var avg = 'SELECT AVG(a) AS avg_a FROM assists WHERE club = ? AND pos = ?';
-    con.query(avg, [club,pos],function (err, result, fields) {
-      if (err) throw err;
-      console.log('>> AVG result: ', result );
-      var string=JSON.stringify(result);
-      console.log('>> AVG string: ', string );
-      var json =  JSON.parse(string);
-      console.log('>> AVG json: ', json);
-      console.log('>> AVG? ', json[0].avg_a);
+      var avg = 'SELECT AVG(a) AS avg_a FROM assists WHERE club = ? AND pos = ?';
+        con.query(avg, [club,pos],function (err, result, fields) {
+        if (err) throw err;
+        console.log('>> AVG result: ', result );
+        var string=JSON.stringify(result);
+        console.log('>> AVG string: ', string );
+        var json =  JSON.parse(string);
+        console.log('>> AVG json: ', json);
+        console.log('>> AVG? ', json[0].avg_a);
 
-      console.log(result);
+        console.log(result);
+        res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_a});
+      });
     });
-  res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_a});
+
+
 });
 
 
