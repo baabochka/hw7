@@ -28,28 +28,21 @@ router.post('/hw7', function(req, res, next) {
 
   con.connect(function(err) {
     if (err) throw err;
+    var sql = 'SELECT club, pos, player, a, gs FROM assists WHERE club = ? AND pos = ? ORDER BY a, gs DESC limit 1;';
+    con.query(sql, [club,pos],function (err, result, fields) {
+      if (err) throw err;
+      console.log('>> result: ', result );
+      var string=JSON.stringify(result);
+      console.log('>> string: ', string );
+      var json =  JSON.parse(string);
+      console.log('>> json: ', json);
+      console.log('>> player: ', json[0].player);
 
+      console.log(result);
+    });
   });
-
-  findPlayer(club,pos);
-
+  res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_assists});
 });
 
 
 module.exports = router;
-
-function findPlayer (club, pos) {
-  var sql = 'SELECT club, pos, player, a, gs FROM assists WHERE club = ? AND pos = ? ORDER BY a, gs DESC limit 1;';
-  con.query(sql, [club,pos],function (err, result, fields) {
-    if (err) throw err;
-    console.log('>> result: ', result );
-    var string=JSON.stringify(result);
-    console.log('>> string: ', string );
-    var json =  JSON.parse(string);
-    console.log('>> json: ', json);
-    console.log('>> player: ', json[0].player);
-
-    console.log(result);
-  });
-  res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_assists});
-}
