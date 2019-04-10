@@ -21,11 +21,11 @@ router.get('/hw7', function(req, res, next) {
 });
 
 router.post('/hw7', function(req, res, next) {
-  let club = req.query.club;
-  let pos = req.query.pos;
-  let max_assists = 0;
-  let player = 0;
-  let avg_assists = 0;
+  var club = req.query.club;
+  var pos = req.query.pos;
+  var max_assists = 0;
+  var player = 0;
+  vart avg_assists = 0;
   con.connect(function(err) {
     if (err) throw err;
     con.query("SELECT * FROM assists", function (err, result, fields) {
