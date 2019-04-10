@@ -31,7 +31,14 @@ router.post('/hw7', function(req, res, next) {
     var sql = 'SELECT as1.club, as1.pos, as1.player, as1.a, as1.gs FROM assists as1 WHERE club = ? AND pos = ? AND a = (select max(a) from assists as2 where as1.club = as2.club)';
     con.query(sql, [club,pos],function (err, result, fields) {
       if (err) throw err;
-      console.log(result.player);
+      console.log('>> results: ', results );
+      var string=JSON.stringify(results);
+      console.log('>> string: ', string );
+      var json =  JSON.parse(string);
+      console.log('>> json: ', json);
+      console.log('>> player: ', json[0].player);
+
+      console.log(result);
     });
   });
   res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_assists});
