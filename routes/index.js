@@ -28,6 +28,9 @@ router.post('/hw7', function(req, res, next) {
 
   con.connect(function(err) {
     if (err) throw err;
+
+  });
+  function findPlayer () {
     var sql = 'SELECT club, pos, player, a, gs FROM assists WHERE club = ? AND pos = ? ORDER BY a, gs DESC limit 1;';
     con.query(sql, [club,pos],function (err, result, fields) {
       if (err) throw err;
@@ -40,8 +43,9 @@ router.post('/hw7', function(req, res, next) {
 
       console.log(result);
     });
-  });
-  res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_assists});
+    res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_assists});
+  }
+
 });
 
 
