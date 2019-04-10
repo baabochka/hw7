@@ -28,7 +28,7 @@ router.post('/hw7', function(req, res, next) {
 
   con.connect(function(err) {
     if (err) throw err;
-    var sql = 'SELECT club, pos, player, a, gs FROM assists WHERE club = ? AND pos = ? ORDER BY a, gs DESC limit 1;';
+    var sql = 'SELECT club, pos, player, a, gs FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC limit 1;';
     con.query(sql, [club,pos],function (err, result, fields) {
       if (err) throw err;
       console.log('>> result: ', result );
