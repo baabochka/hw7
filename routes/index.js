@@ -8,8 +8,11 @@ var con = mysql.createConnection({
   database: "hw7"
 });
 con.connect(function(err) {
-  if (err) throw err;
-  console.log("Error while connecting to MySQL");
+  if (err) {
+    console.log("Error while connecting to MySQL");
+    throw err;
+  }
+
 });
 
 /* GET home page. */
@@ -51,9 +54,9 @@ router.post('/hw7', function(req, res, next) {
         var json =  JSON.parse(string);
         console.log('>> AVG json: ', json);
         console.log('>> AVG? ', json[0].avg_a);
-
+        avg_as = json[0].avg_a;
         console.log(result);
-        res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_a});
+        res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_as});
       });
     });
 
