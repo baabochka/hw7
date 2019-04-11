@@ -58,7 +58,7 @@ router.get('/hw7', function(req, res, next) {
   var avg_assists = 0;
   var key = ''+club+pos;
   var data = memcached.get(key);
-  if (data != NULL) {
+  if (data != null) {
       res.json(data);
   } else {
       var sql = 'SELECT club, pos, player, a, gs  FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC, player ASC';
