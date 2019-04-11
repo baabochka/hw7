@@ -59,6 +59,8 @@ router.get('/hw7', function(req, res, next) {
   var key = ''+club+pos;
   var data = memcached.get(key);
   if (data != null) {
+      console.log("Found key, here is the data: ");
+      console.log(data);
       res.json(data);
   } else {
       var sql = 'SELECT club, pos, player, a, gs  FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC, player ASC';
@@ -78,9 +80,10 @@ router.get('/hw7', function(req, res, next) {
               var res = { club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_as};
               memcached.set(key, res, 600, function (err) {
                   if (err) throw err;
-                  res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_as});
-              });
+                  console.log("Setting memcached key");
 
+              });
+              res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_as});
           });
       });
   }
