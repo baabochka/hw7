@@ -78,8 +78,9 @@ router.get('/hw7', function(req, res, next) {
               var res = { club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_as};
               memcached.set(key, res, 600, function (err) {
                   if (err) throw err;
+                  res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_as});
               });
-              res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_as});
+
           });
       });
   }
