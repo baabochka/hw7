@@ -21,14 +21,33 @@ con.connect(function(err) {
   }
 
 });
-var profile
+let memcachedMiddleware = (duration) => {
+    return  (req,res,next) => {
+        let key = "__express__" + req.originalUrl || req.url;
+        memcached.get(key, function(err,data){
+            if(data){
+                res.send(data);
+                return;
+            }else{
+                res.sendResponse = res.send;
+                res.send = (body) => {
+                    memcached.set(key, body, (duration*60), function(err){
+                        //
+                    });
+                    res.sendResponse(body);
+                }
+                next();
+            }
+        });
+    }
+};
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
 /* GET hw7 page. */
-router.get('/hw7', function(req, res, next) {
+router.get('/hw7', memcachedMiddleware(20), function(req, res, next) {
   var club = req.query.club;
   var pos = req.query.pos
   var max_assists = 0;
