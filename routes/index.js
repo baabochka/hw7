@@ -3,6 +3,9 @@ var router = express.Router();
 var mysql = require('mysql');
 var Memcached = require('memcached');
 var memcached = new Memcached();
+
+var lifetime = 86400; // 24 hrs
+
 memcached.connect('127.0.0.1:11211', function(err,conn){
   if(err) {
   console.log(conn.server);
