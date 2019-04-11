@@ -24,57 +24,65 @@ con.connect(function(err) {
   }
 
 });
-let memcachedMiddleware = (duration) => {
-    return  (req,res,next) => {
-        let key = "__express__" + req.originalUrl || req.url;
-        memcached.get(key, function(err,data){
-            if(data){
-                res.send(data);
-                return;
-            }else{
-                res.sendResponse = res.send;
-                res.send = (body) => {
-                    memcached.set(key, body, (duration*60), function(err){
-                        //
-                    });
-                    res.sendResponse(body);
-                }
-                next();
-            }
-        });
-    }
-};
+// let memcachedMiddleware = (duration) => {
+//     return  (req,res,next) => {
+//         let key = "__express__" + req.originalUrl || req.url;
+//         memcached.get(key, function(err,data){
+//             if(data){
+//                 res.send(data);
+//                 return;
+//             }else{
+//                 res.sendResponse = res.send;
+//                 res.send = (body) => {
+//                     memcached.set(key, body, (duration*60), function(err){
+//                         //
+//                     });
+//                     res.sendResponse(body);
+//                 }
+//                 next();
+//             }
+//         });
+//     }
+// };
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
 /* GET hw7 page. */
-router.get('/hw7', memcachedMiddleware(20), function(req, res, next) {
+router.get('/hw7', function(req, res, next) {
   var club = req.query.club;
   var pos = req.query.pos
   var max_assists = 0;
   var player = 0;
   var avg_assists = 0;
+  var key = ''+club+pos;
+  var data = memcached.get(key);
+  if (data != NULL) {
+      res.json(data);
+  } else {
+      var sql = 'SELECT club, pos, player, a, gs  FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC, player ASC';
+      con.query(sql, [club,pos],function (err, result, fields) {
+          if (err) throw err;
+          var string=JSON.stringify(result);
+          var json =  JSON.parse(string);
+          player = json[0].player;
+          max_assists = json[0].a;
 
-  var sql = 'SELECT club, pos, player, a, gs  FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC, player ASC';
-  con.query(sql, [club,pos],function (err, result, fields) {
-    if (err) throw err;
-    var string=JSON.stringify(result);
-    var json =  JSON.parse(string);
-    player = json[0].player;
-    max_assists = json[0].a;
-    
-    var avg = 'SELECT AVG(a) AS avg_a FROM assists WHERE club = ? AND pos = ?';
-    con.query(avg, [club,pos],function (err, result, fields) {
-      if (err) throw err;
-      var string=JSON.stringify(result);
-      var json =  JSON.parse(string);
-      avg_as = json[0].avg_a;
-      
-      res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_as});
-    });
-  });
+          var avg = 'SELECT AVG(a) AS avg_a FROM assists WHERE club = ? AND pos = ?';
+          con.query(avg, [club,pos],function (err, result, fields) {
+              if (err) throw err;
+              var string=JSON.stringify(result);
+              var json =  JSON.parse(string);
+              avg_as = json[0].avg_a;
+              var res = { club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_as};
+              memcached.set(key, res, 600, function (err) {
+                  if (err) throw err;
+              });
+              res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_as});
+          });
+      });
+  }
 
 });
 
