@@ -21,7 +21,7 @@ con.connect(function(err) {
   }
 
 });
-let memcachedMiddleware = (duration) => {
+var memcachedMiddleware = (duration) => {
     return  (req,res,next) => {
         let key = "__express__" + req.originalUrl || req.url;
         memcached.get(key, function(err,data){
