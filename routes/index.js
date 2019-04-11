@@ -77,8 +77,8 @@ router.get('/hw7', function(req, res, next) {
               var string=JSON.stringify(result);
               var json =  JSON.parse(string);
               avg_as = json[0].avg_a;
-              var res = { club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_as};
-              memcached.set(key, res, 600, function (err) {
+              var resu = { club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_as};
+              memcached.set(key, resu, 600, function (err) {
                   if (err) throw err;
                   console.log("Setting memcached key");
 
