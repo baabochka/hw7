@@ -23,13 +23,13 @@ router.get('/', function(req, res, next) {
 /* GET hw7 page. */
 router.get('/hw7', function(req, res, next) {
   var club = req.query.club;
-  var pos = req.query.pos;
+  var pos = req.query.pos
   var max_assists = 0;
   var player = 0;
   var avg_assists = 0;
 
 
-  var sql = 'SELECT club, pos, player, a, gs FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC limit 1';
+  var sql = 'SELECT club, pos, player, a, gs, gp  FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC, gp DESC, player limit 1';
   con.query(sql, [club,pos],function (err, result, fields) {
     if (err) throw err;
     console.log('>> result: ', result );
@@ -67,7 +67,7 @@ router.post('/hw7', function(req, res, next) {
   var avg_assists = 0;
 
 
-  var sql = 'SELECT club, pos, player, a, gs FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC limit 1';
+  var sql = 'SELECT club, pos, player, a, gs, gp FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC, gp DESC limit 1';
   con.query(sql, [club,pos],function (err, result, fields) {
       if (err) throw err;
       console.log('>> result: ', result );
