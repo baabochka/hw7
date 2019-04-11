@@ -1,6 +1,13 @@
 var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
+var Memcached = require('memcached');
+var memcached = new Memcached();
+memcached.connect('127.0.0.1:11211', function(err,conn){
+  if(err) {
+  console.log(conn.server);
+  }
+});
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -14,7 +21,7 @@ con.connect(function(err) {
   }
 
 });
-
+var profile
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -28,22 +35,21 @@ router.get('/hw7', function(req, res, next) {
   var player = 0;
   var avg_assists = 0;
 
-
-  var sql = 'SELECT club, pos, player, a, gs, gp  FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC, gp DESC, player limit 1';
+  var sql = 'SELECT club, pos, player, a, gs  FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC, player ASC';
   con.query(sql, [club,pos],function (err, result, fields) {
     if (err) throw err;
     var string=JSON.stringify(result);
     var json =  JSON.parse(string);
     player = json[0].player;
     max_assists = json[0].a;
-    console.log(result);
+    
     var avg = 'SELECT AVG(a) AS avg_a FROM assists WHERE club = ? AND pos = ?';
     con.query(avg, [club,pos],function (err, result, fields) {
       if (err) throw err;
       var string=JSON.stringify(result);
       var json =  JSON.parse(string);
       avg_as = json[0].avg_a;
-      console.log(avg_as);
+      
       res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_as});
     });
   });
