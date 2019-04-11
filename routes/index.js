@@ -22,7 +22,41 @@ router.get('/', function(req, res, next) {
 
 /* GET hw7 page. */
 router.get('/hw7', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  var club = req.query.club;
+  var pos = req.query.pos;
+  var max_assists = 0;
+  var player = 0;
+  var avg_assists = 0;
+
+
+  var sql = 'SELECT club, pos, player, a, gs FROM assists WHERE club = ? AND pos = ? ORDER BY a DESC, gs DESC limit 1';
+  con.query(sql, [club,pos],function (err, result, fields) {
+    if (err) throw err;
+    console.log('>> result: ', result );
+    var string=JSON.stringify(result);
+    console.log('>> string: ', string );
+    var json =  JSON.parse(string);
+    console.log('>> json: ', json);
+    console.log('>> player: ', json[0].player);
+    console.log('>> player: ', json[0].a);
+    player = json[0].player;
+    max_assists = json[0].a;
+    console.log(result);
+    var avg = 'SELECT AVG(a) AS avg_a FROM assists WHERE club = ? AND pos = ?';
+    con.query(avg, [club,pos],function (err, result, fields) {
+      if (err) throw err;
+      console.log('>> AVG result: ', result );
+      var string=JSON.stringify(result);
+      console.log('>> AVG string: ', string );
+      var json =  JSON.parse(string);
+      console.log('>> AVG json: ', json);
+      console.log('>> AVG? ', json[0].avg_a);
+      avg_as = json[0].avg_a;
+      console.log(result);
+      res.json({ club: club, pos: pos, max_assists: max_assists, player: player, avg_assists: avg_as});
+    });
+  });
+
 });
 
 router.post('/hw7', function(req, res, next) {
